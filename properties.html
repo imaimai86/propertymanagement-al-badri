@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Properties | Al Badri Property Management</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <meta name="description" content="Browse our exclusive list of properties for sale and rent in Qatar.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@300;400;500;700&family=Capriola&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="header" id="header" style="background-color: var(--primary-color);"> <!-- Force dark header for subpage -->
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo.png" alt="Al Badri Logo">
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="index.html#about" class="nav-link">About Us</a></li>
+                    <li class="nav-item"><a href="index.html#featured" class="nav-link">Featured</a></li>
+                    <li class="nav-item">
+                        <a href="properties.html" class="nav-link active">All Properties <ion-icon name="chevron-down-outline" style="font-size: 0.8em; margin-left: 4px; vertical-align: middle;"></ion-icon></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="properties.html?category=Villa" class="dropdown-item">Villas</a></li>
+                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Villa Apartments</a></li>
+                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Flat</a></li>
+                            <li><a href="properties.html?category=Commercial" class="dropdown-item">Commercial</a></li>
+                            <li><a href="properties.html?type=sale" class="dropdown-item">Sale</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="index.html#contact" class="nav-link btn-contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-icon" style="color: white;">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header" style="padding-top: 120px; padding-bottom: 40px; background-color: #f9f9f9; text-align: center;">
+        <div class="container">
+            <h1 style="color: var(--primary-color);">Our Properties</h1>
+            <p style="color: var(--text-color);">Find your perfect home or investment opportunity</p>
+        </div>
+    </div>
+
+    <!-- Properties Section -->
+    <section class="section properties-page" style="padding: 40px 0;">
+        <div class="container">
+            
+            <!-- Filters -->
+            <div class="filters-container" style="background: white; padding: 20px; border-radius: 8px; box-shadow: var(--shadow-sm); margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;">
+                <div class="filter-group">
+                    <label for="filter-type" style="font-weight: bold; margin-right: 10px;">Type:</label>
+                    <select id="filter-type" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="all">All</option>
+                        <option value="sale">For Sale</option>
+                        <option value="rent">For Rent</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="filter-category" style="font-weight: bold; margin-right: 10px;">Category:</label>
+                    <select id="filter-category" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="all">All</option>
+                        <option value="Villa">Villa</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                </div>
+
+                 <div class="filter-group">
+                   <button id="reset-filters" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9em;">Reset Filters</button>
+                </div>
+            </div>
+
+            <!-- Property Grid -->
+            <div id="property-list" class="gallery-grid">
+                <div style="grid-column: 1 / -1; display: flex; justify-content: center; padding: 60px 0;">
+                    <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 20px; padding: 30px 50px; background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                        <div class="loader-bars">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span style="font-size: 1.1rem; color: #555; font-weight: 500;">Loading properties...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Al Badri Property Management. All rights reserved.</p>
+                <div class="footer-socials">
+                    <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Reuse script.js for mobile menu -->
+    <script src="script.js"></script> 
+    <!-- New script for properties logic -->
+    <script src="properties.js"></script>
+</body>
+</html>
