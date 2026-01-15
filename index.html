@@ -21,35 +21,7 @@
 <body>
 
     <!-- Navigation -->
-    <header class="header" id="header">
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <img src="assets/logo.png" alt="Al Badri Logo">
-            </a>
-            
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
-                    <li class="nav-item"><a href="index.html#about" class="nav-link">About Us</a></li>
-                    <li class="nav-item"><a href="#featured" class="nav-link">Featured</a></li>
-                    <li class="nav-item">
-                        <a href="properties.html" class="nav-link">All Properties <ion-icon name="chevron-down-outline" style="font-size: 0.8em; margin-left: 4px; vertical-align: middle;"></ion-icon></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="properties.html?category=Villa" class="dropdown-item">Villas</a></li>
-                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Villa Apartments</a></li>
-                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Flat</a></li>
-                            <li><a href="properties.html?category=Commercial" class="dropdown-item">Commercial</a></li>
-                            <li><a href="properties.html?type=sale" class="dropdown-item">Sale</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="index.html#contact" class="nav-link btn-contact">Contact Us</a></li>
-                </ul>
-            </nav>
-            <div class="mobile-menu-icon">
-                <ion-icon name="menu-outline"></ion-icon>
-            </div>
-        </div>
-    </header>
+    <div id="header-placeholder" data-active="home"></div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -110,7 +82,7 @@
             
             <!-- Generate a simple grid using CSS placeholders for now unless we gen images -->
             <div id="featured-properties" class="gallery-grid">
-                <!-- Properties will be loaded dynamically from properties.json -->
+                <!-- Properties will be loaded dynamically from appscript url -->
                 <div style="grid-column: 1 / -1; display: flex; justify-content: center; padding: 60px 0;">
                     <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 20px; padding: 30px 50px; background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
                         <div class="loader-bars">
@@ -174,20 +146,11 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Al Badri Property Management. All rights reserved.</p>
-                <div class="footer-socials">
-                    <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
-                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
-                    <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <!-- Scripts -->
+    <script src="assets/scripts/config.js"></script>
+    <script src="assets/scripts/include-components.js"></script>
     <script src="assets/scripts/contact-form.js"></script>
     <script src="assets/scripts/script.js"></script>
 </body>

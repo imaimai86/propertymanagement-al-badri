@@ -1,6 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Make initHeader globally available for the component loader
+window.initHeader = function() {
     // Header Scroll Effect
     const header = document.getElementById('header');
+    if (!header) return; // Guard clause if header not yet loaded
+
+    // Remove existing listener to prevent duplicates if called multiple times (simple approach)
+    // In a more complex app we'd track the handler function reference.
+    // For now, we assume this is called once per page load after injection.
     
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
@@ -14,11 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuIcon = document.querySelector('.mobile-menu-icon');
     const nav = document.querySelector('.nav');
 
-    if (menuIcon) {
-        menuIcon.addEventListener('click', () => {
+    if (menuIcon && nav) {
+        // Clone and replace to remove old listeners (brute force cleanup)
+        const newMenuIcon = menuIcon.cloneNode(true);
+        menuIcon.parentNode.replaceChild(newMenuIcon, menuIcon);
+        
+        newMenuIcon.addEventListener('click', () => {
             nav.classList.toggle('open');
             const icon = nav.classList.contains('open') ? 'close-outline' : 'menu-outline';
-            menuIcon.querySelector('ion-icon').setAttribute('name', icon);
+            newMenuIcon.querySelector('ion-icon').setAttribute('name', icon);
         });
     }
 
@@ -29,7 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const menu = item.querySelector('.dropdown-menu');
         
         if (menu && link) {
-            link.addEventListener('click', (e) => {
+             // Clone link to remove old listeners
+             const newLink = link.cloneNode(true);
+             link.parentNode.replaceChild(newLink, link);
+             
+             newLink.addEventListener('click', (e) => {
                 if (window.innerWidth <= 768) {
                     // Only toggle if the icon was clicked
                     if (e.target.tagName === 'ION-ICON' || e.target.closest('ion-icon')) {
@@ -38,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         menu.classList.toggle('active');
                         
                         // Rotate icon
-                        const icon = link.querySelector('ion-icon');
+                        const icon = newLink.querySelector('ion-icon');
                         if (icon) {
                             icon.style.transform = menu.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
                             icon.style.transition = 'transform 0.3s ease';
@@ -50,15 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Smooth Scrolling for Anchors
+    // Smooth Scrolling for Anchors (re-bind)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
             
             // Only handle links that actually start with #
             if (!targetId || !targetId.startsWith('#')) return;
-            
-            // If it's just "#" with no ID, do nothing (or let default happen if you prefer, but usually we prevent jump)
             if (targetId === '#') {
                 e.preventDefault();
                 return;
@@ -68,29 +80,37 @@ document.addEventListener('DOMContentLoaded', () => {
             
             try {
                 const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                // Close mobile menu if open
-                if (nav.classList.contains('open')) {
-                    nav.classList.remove('open');
-                    menuIcon.querySelector('ion-icon').setAttribute('name', 'menu-outline');
+                const nav = document.querySelector('.nav');
+                const menuIcon = document.querySelector('.mobile-menu-icon');
+
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (nav && nav.classList.contains('open')) {
+                        nav.classList.remove('open');
+                        if (menuIcon) menuIcon.querySelector('ion-icon').setAttribute('name', 'menu-outline');
+                    }
+
+                    // Get current header height which might change
+                    const headerHeight = document.querySelector('.header').classList.contains('scrolled') ? 80 : 100;
+                    
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
                 }
-
-                // Get current header height which might change
-                const headerHeight = document.querySelector('.header').classList.contains('scrolled') ? 80 : 100;
-                
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
             } catch (err) {
                 console.warn('Smooth scroll invalid target:', targetId);
             }
         });
     });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Attempt init in case header is static (legacy)
+    window.initHeader();
 
     // Simple fade-in animation on scroll
     const observerOptions = {
@@ -115,15 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // Configuration - Set this to your Apps Script URL once deployed
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqtr-5Caf5O_ZyckSeqEbc5LuP9041SD7rfVzNkJK4R2vn8JeDASFQdiUTPmoCa67V/exec"; // AI - Do not change this
-
     // Load Featured Properties immediately with slight delay
     const featuredContainer = document.getElementById('featured-properties');
     if (featuredContainer) {
         // Add a slight delay for better UX
         setTimeout(() => {
-            const dataSource = APPS_SCRIPT_URL || 'properties.json';
+            const dataSource = CONFIG.APPS_SCRIPT_URL_LISTINGS;
             fetch(dataSource)
                 .then(res => res.json())
                 .then(data => {
@@ -132,11 +149,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     featured.forEach(p => {
                         const item = document.createElement('a'); // Changed to <a>
-                        item.href = `property-details.html?id=${p.id}`; // Add link
+                        // Simple slug creation
+                        const slug = p.title.toLowerCase()
+                            .replace(/[^\w\s-]/g, '')
+                            .replace(/[\s_-]+/g, '-')
+                            .replace(/^-+|-+$/g, '');
+                            
+                        item.href = `property-details.html?id=${p.id}&slug=${slug}`; // Add link
                         item.style.display = "block";
                         item.className = 'gallery-item';
+                        const rawImg = p.image || p.thumbnail;
+                        let imgUrl = rawImg;
+                        if (rawImg && !rawImg.startsWith('http')) {
+                            const baseUrl = CONFIG.S3_BASE_URL.endsWith('/') ? CONFIG.S3_BASE_URL : CONFIG.S3_BASE_URL + '/';
+                            const path = rawImg.startsWith('/') ? rawImg.substring(1) : rawImg;
+                            imgUrl = baseUrl + path;
+                        }
+
                         item.innerHTML = `
-                            <img src="${p.image || p.thumbnail}" alt="${p.title}" class="gallery-img-real">
+                            <img src="${imgUrl}" alt="${p.title}" class="gallery-img-real">
                             <div class="gallery-info">
                                 <h4>${p.title}</h4>
                                 <p>${p.location}</p>

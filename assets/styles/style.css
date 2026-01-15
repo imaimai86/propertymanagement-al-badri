@@ -47,6 +47,15 @@ body {
     color: var(--text-color);
     background-color: var(--white);
     overflow-x: hidden;
+    /* Sticky Footer Setup */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#footer-placeholder {
+    margin-top: auto;
+    width: 100%;
 }
 
 h1, h2, h3, h4 {
@@ -265,16 +274,31 @@ img {
 }
 
 .btn-contact {
-    padding: 8px 20px;
-    background-color: var(--white);
-    color: var(--primary-color) !important;
-    border-radius: 4px;
-    border: 2px solid var(--white);
+    display: inline-block;
+    padding: 14px 34px;
+    background-color: var(--primary-color);
+    color: var(--text-white) !important;
+    border-radius: 50px;
+    border: 2px solid var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    box-shadow: 0 4px 15px rgba(187, 48, 71, 0.3);
+    transition: var(--transition);
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.nav-link.btn-contact::after {
+    display: none;
 }
 
 .btn-contact:hover {
-    background-color: transparent;
-    color: var(--white) !important;
+    background-color: var(--white);
+    color: var(--primary-color) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .mobile-menu-icon {

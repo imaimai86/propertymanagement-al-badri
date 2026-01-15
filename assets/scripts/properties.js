@@ -4,13 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterCategory = document.getElementById('filter-category');
     const resetBtn = document.getElementById('reset-filters');
 
-    // Configuration - Set this to your Apps Script URL once deployed
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqtr-5Caf5O_ZyckSeqEbc5LuP9041SD7rfVzNkJK4R2vn8JeDASFQdiUTPmoCa67V/exec"; // AI - Do not change this
-    
     let allProperties = [];
 
-    // Fetch data
-    const dataSource = APPS_SCRIPT_URL || 'properties.json';
+    // Fetch data from configuration
+    const dataSource = CONFIG.APPS_SCRIPT_URL_LISTINGS;
 
     fetch(dataSource)
         .then(response => response.json())
@@ -60,6 +57,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateFilters() {
         const filtered = getFilteredProperties();
+        
+        // Update URL with current filters
+        const typeVal = filterType ? filterType.value : 'all';
+        const catVal = filterCategory ? filterCategory.value : 'all';
+        
+        const newUrl = new URL(window.location);
+        
+        if (typeVal !== 'all') newUrl.searchParams.set('type', typeVal);
+        else newUrl.searchParams.delete('type');
+        
+        if (catVal !== 'all') newUrl.searchParams.set('category', catVal);
+        else newUrl.searchParams.delete('category');
+        
+        window.history.pushState({}, '', newUrl);
+        
         renderProperties(filtered);
     }
 
@@ -88,6 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function createSlug(title) {
+        return title.toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special chars
+            .replace(/[\s_-]+/g, '-') // Replace spaces with hyphens
+            .replace(/^-+|-+$/g, ''); // Trim hyphens
+    }
+
     function renderProperties(properties) {
         if (!propertyList) return;
         
@@ -100,7 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         properties.forEach(p => {
             const card = document.createElement('a'); // Changed to <a>
-            card.href = `property-details.html?id=${p.id}`; // Add link
+            // Only create slug if property doesn't already have one
+            const slug = p.slug || createSlug(p.title);
+            // Pass current filters as a 'ref' parameter to render the Back button correctly
+            const currentSearch = window.location.search;
+            const refParam = currentSearch ? `&ref=${encodeURIComponent(currentSearch)}` : '';
+            
+            card.href = `property-details.html?id=${p.id}&slug=${slug}${refParam}`; // Add link
             card.style.display = "block";
             card.className = 'gallery-item';
             
@@ -108,9 +133,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const formattedPrice = p.price.toLocaleString();
             const priceLabel = `${p.currency} ${formattedPrice}`;
 
+            const rawImg = p.image || p.thumbnail;
+            let imgUrl = rawImg;
+            if (rawImg && !rawImg.startsWith('http')) {
+                const baseUrl = CONFIG.S3_BASE_URL.endsWith('/') ? CONFIG.S3_BASE_URL : CONFIG.S3_BASE_URL + '/';
+                const path = rawImg.startsWith('/') ? rawImg.substring(1) : rawImg;
+                imgUrl = baseUrl + path;
+            }
+
             card.innerHTML = `
                 <div class="image-container" style="position: relative; overflow: hidden; height: 250px;">
-                    <img src="${p.image || p.thumbnail}" alt="${p.title}" class="gallery-img-real" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
+                    <img src="${imgUrl}" alt="${p.title}" class="gallery-img-real" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
                     <span class="badge" style="position: absolute; top: 15px; right: 15px; background: var(--secondary-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.8em; text-transform: uppercase; font-weight: 500; letter-spacing: 0.5px;">${p.type}</span>
                 </div>
                 <div class="gallery-info" style="padding: 20px; text-align: left;">

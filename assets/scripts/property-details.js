@@ -1,8 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Configuration - Set this to your Apps Script URL once deployed
-    const APPS_SCRIPT_URL_LISTINGS = "https://script.google.com/macros/s/AKfycbyqtr-5Caf5O_ZyckSeqEbc5LuP9041SD7rfVzNkJK4R2vn8JeDASFQdiUTPmoCa67V/exec"; // Do not change
-    const APPS_SCRIPT_URL_LEADS = "https://script.google.com/macros/s/AKfycbyMdbabyBxJg3Mm-Hbc-zPFio_hgw-Bu_ZV--iLaXO1VVlnTTnMSFzdlRFpicjzIKAe0Q/exec"; // Do not change
-    
     const loadingState = document.getElementById('loading-state');
     const propertyContent = document.getElementById('property-content');
     
@@ -12,27 +8,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     
-    // Extract ID from URL
+    // Extract ID and Slug from URL
     const urlParams = new URLSearchParams(window.location.search);
     const propId = urlParams.get('id');
+    const propSlugParam = urlParams.get('slug');
+    const refParam = urlParams.get('ref');
 
-    if (!propId) {
+    // Update Back Link if ref is present
+    if (refParam) {
+        // Find the back link which contains "Back to Properties"
+        const backLinks = document.querySelectorAll('a[href*="properties.html"]');
+        backLinks.forEach(link => {
+            if (link.textContent.includes('Back to Properties')) {
+                link.href = `properties.html${refParam}#property-list`;
+            }
+        });
+    }
+
+    if (!propId && !propSlugParam) {
         loadingState.innerHTML = '<p>Property not found. <a href="properties.html">Return to listings</a>.</p>';
         return;
     }
 
+    // Helper to create slug from title
+    function createSlug(title) {
+        return title.toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
     // Fetch Data
-    const dataSource = APPS_SCRIPT_URL_LISTINGS || 'properties.json';
-    console.log("Datasource:", dataSource)
+    const dataSource = CONFIG.APPS_SCRIPT_URL_LISTINGS;
     fetch(dataSource)
         .then(res => res.json())
         .then(data => {
-            console.log("Loaded data", data)
-            const property = data.find(p => String(p.id) === String(propId));
+            let property = null;
+
+            if (propId) {
+                property = data.find(p => String(p.id) === String(propId));
+            }
+            
+            // Fallback to slug lookup if ID didn't match or wasn't provided
+            if (!property && propSlugParam) {
+                property = data.find(p => createSlug(p.title) === propSlugParam);
+            }
+
             if (property) {
                 renderPropertyDetails(property);
             } else {
-                loadingState.innerHTML = `<p>Property not found (ID: ${propId}). <a href="properties.html">Return to listings</a>.</p>`;
+                loadingState.innerHTML = `<p>Property not found. <a href="properties.html">Return to listings</a>.</p>`;
             }
         })
         .catch(err => {
@@ -111,10 +136,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         images.forEach((imgSrc, index) => {
+            // Resolve full URL
+            let fullImgUrl = imgSrc;
+            if (imgSrc && !imgSrc.startsWith('http')) {
+                 const baseUrl = CONFIG.S3_BASE_URL.endsWith('/') ? CONFIG.S3_BASE_URL : CONFIG.S3_BASE_URL + '/';
+                 const path = imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc;
+                 fullImgUrl = baseUrl + path;
+            }
+
             // Slide
             const slide = document.createElement('div');
             slide.style.cssText = "min-width: 100%; height: 100%; position: relative;";
-            slide.innerHTML = `<img src="${imgSrc}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            slide.innerHTML = `<img src="${fullImgUrl}" style="width: 100%; height: 100%; object-fit: cover;">`;
             carouselSlides.appendChild(slide);
 
             // Dot

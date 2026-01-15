@@ -7,8 +7,8 @@ REGION="us-east-1" # Change this if needed
 
 # ⚠️ SECURITY WARNING: Hardcoding credentials is not recommended.
 # Use this ONLY if you understand the risks and are in a secure environment.
-export AWS_ACCESS_KEY_ID=${PERSONCL_S_KEY_ID}
-export AWS_SECRET_ACCESS_KEY=${PERSONCL_T_ACCESS_KEY}
+export AWS_ACCESS_KEY_ID=${PERSONAL_AWS_ACCESS_KEY_ID}
+export AWS_SECRET_ACCESS_KEY=${PERSONAL_AWS_SECRET_ACCESS_KEY}
 if [ -z "$BUCKET_NAME" ]; then
     echo "Usage: ./deploy.sh <bucket-name>"
     exit 1

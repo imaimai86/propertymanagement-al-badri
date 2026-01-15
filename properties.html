@@ -21,35 +21,7 @@
 <body>
 
     <!-- Navigation -->
-    <header class="header" id="header" style="background-color: var(--primary-color);"> <!-- Force dark header for subpage -->
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <img src="assets/logo.png" alt="Al Badri Logo">
-            </a>
-            
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="index.html#about" class="nav-link">About Us</a></li>
-                    <li class="nav-item"><a href="index.html#featured" class="nav-link">Featured</a></li>
-                    <li class="nav-item">
-                        <a href="properties.html" class="nav-link active">All Properties <ion-icon name="chevron-down-outline" style="font-size: 0.8em; margin-left: 4px; vertical-align: middle;"></ion-icon></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="properties.html?category=Villa" class="dropdown-item">Villas</a></li>
-                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Villa Apartments</a></li>
-                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Flat</a></li>
-                            <li><a href="properties.html?category=Commercial" class="dropdown-item">Commercial</a></li>
-                            <li><a href="properties.html?type=sale" class="dropdown-item">Sale</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="index.html#contact" class="nav-link btn-contact">Contact Us</a></li>
-                </ul>
-            </nav>
-            <div class="mobile-menu-icon" style="color: white;">
-                <ion-icon name="menu-outline"></ion-icon>
-            </div>
-        </div>
-    </header>
+    <div id="header-placeholder" data-active="properties" data-force-bg="true"></div>
 
     <!-- Page Header -->
     <div class="page-header" style="padding-top: 120px; padding-bottom: 40px; background-color: #f9f9f9; text-align: center;">
@@ -107,20 +79,11 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Al Badri Property Management. All rights reserved.</p>
-                <div class="footer-socials">
-                    <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
-                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
-                    <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <!-- Scripts -->
+    <script src="assets/scripts/config.js"></script>
+    <script src="assets/scripts/include-components.js"></script>
     <script src="assets/scripts/properties.js"></script>
     <script src="assets/scripts/script.js"></script>
  

@@ -20,39 +20,23 @@
 <body>
 
     <!-- Navigation -->
-    <header class="header" id="header" style="background-color: var(--primary-color);">
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <img src="assets/logo.png" alt="Al Badri Logo">
-            </a>
-            
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="index.html#about" class="nav-link">About Us</a></li>
-                    <li class="nav-item"><a href="index.html#featured" class="nav-link">Featured</a></li>
-                    <li class="nav-item">
-                        <a href="properties.html" class="nav-link">All Properties <ion-icon name="chevron-down-outline" style="font-size: 0.8em; margin-left: 4px; vertical-align: middle;"></ion-icon></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="properties.html?category=Villa" class="dropdown-item">Villas</a></li>
-                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Villa Apartments</a></li>
-                            <li><a href="properties.html?category=Apartment" class="dropdown-item">Flat</a></li>
-                            <li><a href="properties.html?category=Commercial" class="dropdown-item">Commercial</a></li>
-                            <li><a href="properties.html?type=sale" class="dropdown-item">Sale</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="index.html#contact" class="nav-link btn-contact">Contact Us</a></li>
-                </ul>
-            </nav>
-            <div class="mobile-menu-icon" style="color: white;">
-                <ion-icon name="menu-outline"></ion-icon>
-            </div>
-        </div>
-    </header>
+    <div id="header-placeholder" data-active="properties" data-force-bg="true"></div>
 
     <!-- Property Content -->
     <main class="property-details-page" style="padding-top: 120px; padding-bottom: 60px;">
         <div class="container">
+            <!-- Back Navigation -->
+            <div style="margin-bottom: 20px;">
+                <a href="properties.html#property-list" style="display: inline-flex; align-items: center; gap: 8px; color: #666; font-weight: 500; transition: color 0.3s ease; text-decoration: none;">
+                    <ion-icon name="arrow-back-outline" style="font-size: 1.2rem;"></ion-icon>
+                    <span style="border-bottom: 1px solid transparent; transition: border-color 0.3s ease;">Back to Properties</span>
+                </a>
+                <style>
+                    a[href*="properties.html"]:hover span { border-color: currentColor; }
+                    a[href*="properties.html"]:hover { color: var(--primary-color) !important; }
+                </style>
+            </div>
+
             <div id="loading-state" style="text-align: center; padding: 100px 0;">
                 <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 20px; padding: 30px 50px; background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
                     <div class="loader-bars">
@@ -111,12 +95,12 @@
                             </div>
                         </div>
 
-                        <div class="prop-description" style="margin-bottom: 40px;">
+                        <div class="prop-description" id="description" style="margin-bottom: 40px;">
                             <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Description</h3>
                             <div id="prop-long-desc" style="line-height: 1.8; color: #444; font-size: 1.1rem;"></div>
                         </div>
 
-                        <div class="prop-amenities">
+                        <div class="prop-amenities" id="amenities">
                             <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Amenities</h3>
                             <ul id="prop-amenities-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
                                 <!-- Amenities injected here -->
@@ -131,7 +115,7 @@
                             
                             <hr style="border: 0; border-top: 1px solid #ddd; margin-bottom: 30px;">
                             
-                            <div class="agent-info" style="margin-bottom: 30px;">
+                            <div class="agent-info" id="agent-contact" style="margin-bottom: 30px;">
                                 <p style="font-weight: bold; color: #333; margin-bottom: 5px;">Listing Agent</p>
                                 <h4 id="agent-name" style="font-size: 1.2rem; margin-bottom: 15px;"></h4>
                                 <a id="agent-call" href="#" class="btn btn-primary" style="width: 100%; text-align: center; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
@@ -178,22 +162,13 @@
             </form>
         </div>
     </div>
-
+    
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Al Badri Property Management. All rights reserved.</p>
-                <div class="footer-socials">
-                    <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
-                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
-                    <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <!-- Scripts -->
+    <script src="assets/scripts/config.js"></script>
+    <script src="assets/scripts/include-components.js"></script>
     <script src="assets/scripts/script.js"></script>
     <script src="assets/scripts/contact-form.js"></script>
     <script src="assets/scripts/property-details.js"></script>
